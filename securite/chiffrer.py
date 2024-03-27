@@ -32,5 +32,5 @@ chiffre = cle_publique.encrypt(
 )
 
 # Enregistrez les donnes cryptes
-with open("cles/chiffrer_donnes.bin","wb") as f:
+with open("key/chiffrer_donnes.bin","wb") as f:
     f.write(chiffre)
