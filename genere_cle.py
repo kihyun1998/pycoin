@@ -8,8 +8,8 @@ cle_privee = rsa.generate_private_key(
     backend=default_backend()
 )
 
-# Enregistrer la cle privee
-with open("cle_privee.pem","wb") as f:
+# Enregistrer la cle prive
+with open("cle_prive.pem","wb") as f:
     f.write(cle_privee.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.PKCS8,
