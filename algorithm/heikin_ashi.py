@@ -50,7 +50,7 @@ Ploting
 """
 
 # Creating figure with subplots
-fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.02, subplot_titles=('BTC-USD with 200-Minute EMA', 'Stochastic RSI'))
+fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02, subplot_titles=('BTC-USD with 200-Minute EMA', 'Stochastic RSI'),row_heights=[0.7,0.3])
 
 # Plot Heikin Ashi
 fig.add_trace(go.Candlestick(x=heikin_ashi_df.index, open=heikin_ashi_df['Open'], high=heikin_ashi_df['High'], low=heikin_ashi_df['Low'], close=heikin_ashi_df['Close'], name='Heikin Ashi'), row=1, col=1)
@@ -59,21 +59,22 @@ fig.add_trace(go.Candlestick(x=heikin_ashi_df.index, open=heikin_ashi_df['Open']
 fig.add_trace(go.Scatter(x=df.index, y=ema200, mode='lines', name='200-Minute EMA', line=dict(color='blue', width=1)), row=1, col=1)
 
 # Plot StochRSI K line
-fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['K'], mode='lines', name='StochRSI K', line=dict(color='red', width=1)), row=3, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['K'], mode='lines', name='StochRSI K', line=dict(color='red', width=1)), row=2, col=1)
 
 # Plot StochRSI D line
-fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['D'], mode='lines', name='StochRSI D', line=dict(color='green', width=1)), row=3, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['D'], mode='lines', name='StochRSI D', line=dict(color='green', width=1)), row=2, col=1)
 
 # Add horizontal line at y=80 for overbought level
-fig.add_trace(go.Scatter(x=df.index, y=[80]*len(df.index), mode='lines', name='Overbought', line=dict(color='grey', dash='dash')), row=3, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=[80]*len(df.index), mode='lines', name='Overbought', line=dict(color='grey', dash='dash')), row=2, col=1)
 
 # Add horizontal line at y=20 for oversold level
-fig.add_trace(go.Scatter(x=df.index, y=[20]*len(df.index), mode='lines', name='Oversold', line=dict(color='grey', dash='dash')), row=3, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=[20]*len(df.index), mode='lines', name='Oversold', line=dict(color='grey', dash='dash')), row=2, col=1)
 # Update layout
+fig.update_layout(xaxis_rangeslider_visible=False)
 fig.update_layout(height=700, title_text="BTC-USD Analysis with Heikin Ashi, 200-Minute EMA, and Stochastic RSI")
-fig.update_xaxes(title_text="Time", row=3, col=1)
+fig.update_xaxes(title_text="Time", row=2, col=1)
 fig.update_yaxes(title_text="Price", row=1, col=1)
-fig.update_yaxes(title_text="StochRSI Value", row=3, col=1)
+fig.update_yaxes(title_text="StochRSI Value", row=2, col=1)
 
 # Show plot
 fig.show()
