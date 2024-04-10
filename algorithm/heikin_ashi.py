@@ -2,10 +2,10 @@ import plotly.graph_objects as go
 import yfinance as yf
 from math_extention.math_extention import perfectRound
 from plotly.subplots import make_subplots
-from rsi import cal_rsi, cal_stochastic_rsi
+from rsi import cal_rsi, stochastic_rsi
 
 symbol = "BTC-USD"
-df = yf.download(tickers=symbol, period="1w", interval="5m")
+df = yf.download(tickers=symbol, period="5d", interval="15m")
 
 """
 Heikin Ashi
@@ -41,7 +41,7 @@ ema200 = df['Close'].ewm(span=200,adjust=False).mean()
 Stoch RSI
 """
 heikin_ashi_df['RSI'] = cal_rsi(df)
-heikin_ashi_df['K'],heikin_ashi_df['D'] = cal_stochastic_rsi(heikin_ashi_df['RSI'])
+heikin_ashi_df['K'],heikin_ashi_df['D'] = stochastic_rsi(heikin_ashi_df['RSI'])
 
 print(heikin_ashi_df)
 
@@ -56,19 +56,64 @@ fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02, su
 fig.add_trace(go.Candlestick(x=heikin_ashi_df.index, open=heikin_ashi_df['Open'], high=heikin_ashi_df['High'], low=heikin_ashi_df['Low'], close=heikin_ashi_df['Close'], name='Heikin Ashi'), row=1, col=1)
 
 # Plot 200-minute EMA
-fig.add_trace(go.Scatter(x=df.index, y=ema200, mode='lines', name='200-Minute EMA', line=dict(color='blue', width=1)), row=1, col=1)
-
-# Plot StochRSI K line
-fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['K'], mode='lines', name='StochRSI K', line=dict(color='red', width=1)), row=2, col=1)
+fig.add_trace(
+    go.Scatter(
+        x=df.index, 
+        y=ema200, mode='lines', 
+        name='200-Minute EMA', 
+        line=dict(color='purple', width=2)
+    ), 
+    row=1, col=1
+)
 
 # Plot StochRSI D line
-fig.add_trace(go.Scatter(x=df.index, y=heikin_ashi_df['D'], mode='lines', name='StochRSI D', line=dict(color='green', width=1)), row=2, col=1)
+fig.add_trace(
+    go.Scatter(
+        x=df.index, 
+        y=heikin_ashi_df['D'], 
+        mode='lines', 
+        name='StochRSI D', 
+        line=dict(color='orange', width=1.5)
+    ), 
+    row=2, col=1
+)
+
+# Plot StochRSI K line
+fig.add_trace(
+    go.Scatter(
+        x=df.index, 
+        y=heikin_ashi_df['K'], 
+        mode='lines', 
+        name='StochRSI K', 
+        line=dict(color='blue', width=1.5)
+    ), 
+    row=2, col=1
+)
 
 # Add horizontal line at y=80 for overbought level
-fig.add_trace(go.Scatter(x=df.index, y=[80]*len(df.index), mode='lines', name='Overbought', line=dict(color='grey', dash='dash')), row=2, col=1)
+fig.add_trace(
+    go.Scatter(
+        x=df.index, 
+        y=[80]*len(df.index), 
+        mode='lines', 
+        name='Overbought', 
+        line=dict(color='grey', dash='dash')
+    ), 
+    row=2, col=1
+)
 
 # Add horizontal line at y=20 for oversold level
-fig.add_trace(go.Scatter(x=df.index, y=[20]*len(df.index), mode='lines', name='Oversold', line=dict(color='grey', dash='dash')), row=2, col=1)
+fig.add_trace(
+    go.Scatter(
+        x=df.index, 
+        y=[20]*len(df.index), 
+        mode='lines', 
+        name='Oversold', 
+        line=dict(color='grey', dash='dash')
+        ), 
+    row=2, col=1
+)
+
 # Update layout
 fig.update_layout(xaxis_rangeslider_visible=False)
 fig.update_layout(height=700, title_text="BTC-USD Analysis with Heikin Ashi, 200-Minute EMA, and Stochastic RSI")
