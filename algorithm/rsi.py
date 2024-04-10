@@ -1,4 +1,4 @@
-def cal_rsi(data,time_period=14):
+def cal_rsi(data,rsi_length=14):
     delta = data['Close'].diff(1)
     delta = delta.dropna()
     
@@ -8,8 +8,8 @@ def cal_rsi(data,time_period=14):
     up[up<0]=0
     down[down>0]=0
 
-    avg_gain = up.ewm(com=time_period-1,min_periods=time_period).mean()
-    avg_loss = abs(down.ewm(com=time_period-1,min_periods=time_period).mean())
+    avg_gain = up.ewm(com=rsi_length-1,min_periods=rsi_length).mean()
+    avg_loss = abs(down.ewm(com=rsi_length-1,min_periods=rsi_length).mean())
     
     rs = avg_gain / avg_loss
     rsi = 100.0 - (100.0/(1.0+rs))
@@ -17,11 +17,12 @@ def cal_rsi(data,time_period=14):
     return rsi
 
 
-def cal_stochastic_rsi(data, k_windw=3, d_windw=3, window=14):
-    min_val = data.rolling(window=window, center=False).min()
-    max_val = data.rolling(window=window, center=False).max()
-    stoch = ( (data-min_val) / (max_val - min_val) ) * 100
-    k = stoch.rolling(window=k_windw,center=False).mean()
-    d = k.rolling(window=d_windw,center=False).mean()
+def stochastic_rsi(rsi, k=3, d=3, stoch_length=14):
+    min_val = rsi.rolling(window=stoch_length, center=False).min()
+    max_val = rsi.rolling(window=stoch_length, center=False).max()
+    stoch_rsi = ( (rsi - min_val) / (max_val - min_val) ) * 100
+    k = stoch_rsi.rolling(window=k,center=False).mean()
+    d = k.rolling(window=d,center=False).mean()
     
     return k,d
+
