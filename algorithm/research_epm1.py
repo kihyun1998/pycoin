@@ -1,3 +1,5 @@
+# 차트만 그리는 코드입니다.
+
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta

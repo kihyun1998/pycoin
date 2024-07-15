@@ -1,4 +1,4 @@
-# technical_indicators/parabolicSAR.py
+# technical_indicators/parabolic_sar.py
 
 import pandas as pd
 import numpy as np
@@ -21,37 +21,37 @@ def calculate_parabolic_sar(data: pd.DataFrame, step: float = 0.02, max_step: fl
     trend = pd.Series(1, index=high.index)  # 1 for uptrend, -1 for downtrend
     
     for i in range(2, len(data)):
-        trend[i] = trend[i-1]
-        sar[i] = sar[i-1] + af[i-1] * (ep[i-1] - sar[i-1])
+        trend.iloc[i] = trend.iloc[i-1]
+        sar.iloc[i] = sar.iloc[i-1] + af.iloc[i-1] * (ep.iloc[i-1] - sar.iloc[i-1])
         
-        if trend[i] > 0:
-            if low[i] > sar[i]:
-                sar[i] = min(sar[i], low[i-1], low[i-2])
-            if high[i] > ep[i-1]:
-                ep[i] = high[i]
-                af[i] = min(af[i-1] + step, max_step)
+        if trend.iloc[i] > 0:
+            if low.iloc[i] > sar.iloc[i]:
+                sar.iloc[i] = min(sar.iloc[i], low.iloc[i-1], low.iloc[i-2])
+            if high.iloc[i] > ep.iloc[i-1]:
+                ep.iloc[i] = high.iloc[i]
+                af.iloc[i] = min(af.iloc[i-1] + step, max_step)
             else:
-                ep[i] = ep[i-1]
-                af[i] = af[i-1]
-            if sar[i] > low[i]:
-                trend[i] = -1
-                sar[i] = ep[i]
-                ep[i] = low[i]
-                af[i] = step
+                ep.iloc[i] = ep.iloc[i-1]
+                af.iloc[i] = af.iloc[i-1]
+            if sar.iloc[i] > low.iloc[i]:
+                trend.iloc[i] = -1
+                sar.iloc[i] = ep.iloc[i]
+                ep.iloc[i] = low.iloc[i]
+                af.iloc[i] = step
         else:
-            if high[i] < sar[i]:
-                sar[i] = max(sar[i], high[i-1], high[i-2])
-            if low[i] < ep[i-1]:
-                ep[i] = low[i]
-                af[i] = min(af[i-1] + step, max_step)
+            if high.iloc[i] < sar.iloc[i]:
+                sar.iloc[i] = max(sar.iloc[i], high.iloc[i-1], high.iloc[i-2])
+            if low.iloc[i] < ep.iloc[i-1]:
+                ep.iloc[i] = low.iloc[i]
+                af.iloc[i] = min(af.iloc[i-1] + step, max_step)
             else:
-                ep[i] = ep[i-1]
-                af[i] = af[i-1]
-            if sar[i] < high[i]:
-                trend[i] = 1
-                sar[i] = ep[i]
-                ep[i] = high[i]
-                af[i] = step
+                ep.iloc[i] = ep.iloc[i-1]
+                af.iloc[i] = af.iloc[i-1]
+            if sar.iloc[i] < high.iloc[i]:
+                trend.iloc[i] = 1
+                sar.iloc[i] = ep.iloc[i]
+                ep.iloc[i] = high.iloc[i]
+                af.iloc[i] = step
     
     return sar
 
